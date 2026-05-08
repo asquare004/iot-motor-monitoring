@@ -1,0 +1,27 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local environment and secrets
+.env
+**/.env
+!.env.example
+!**/.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Local runtime artifacts
+*.joblib
+CloudBackend/AI/models/*
+!CloudBackend/AI/models/.gitkeep
+controlboard.db
+ControlBoard/data/*
+!ControlBoard/data/.gitkeep
+*.sqlite
+*.sqlite3
+
+# Keep placeholder directories for local credentials.
+!.gitkeep

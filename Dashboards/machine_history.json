@@ -1,0 +1,449 @@
+[
+    {
+        "apiVersion": "influxdata.com/v2alpha1",
+        "kind": "Dashboard",
+        "metadata": {
+            "name": "hopeful-blackwell-ce5001"
+        },
+        "spec": {
+            "charts": [
+                {
+                    "axes": [
+                        {
+                            "base": "10",
+                            "name": "x",
+                            "scale": "linear"
+                        },
+                        {
+                            "base": "10",
+                            "name": "y",
+                            "scale": "linear"
+                        }
+                    ],
+                    "colorizeRows": true,
+                    "colors": [
+                        {
+                            "id": "j2JGX0eK94_4B5BMbA6LG",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#31C0F6"
+                        },
+                        {
+                            "id": "1dikiSSgSrJ7Vw-HQED9z",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#A500A5"
+                        },
+                        {
+                            "id": "A7Tl3ma1oOMCKnJiXUh-5",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#FF7E27"
+                        }
+                    ],
+                    "geom": "line",
+                    "height": 3,
+                    "hoverDimension": "auto",
+                    "kind": "Xy",
+                    "legendColorizeRows": true,
+                    "legendOpacity": 1,
+                    "legendOrientationThreshold": 100000000,
+                    "name": "Current",
+                    "opacity": 1,
+                    "orientationThreshold": 100000000,
+                    "position": "overlaid",
+                    "queries": [
+                        {
+                            "query": "from(bucket: \"sensordata\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"machine_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"current\")\n  |> filter(fn: (r) => r[\"machine_id\"] == v.machine)\n  |> filter(fn: (r) => r[\"operating_state\"] == \"OFF\" or r[\"operating_state\"] == \"RUNNING\" or r[\"operating_state\"] == \"STARTING\")\n  |> group()\n\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n\n  |> yield(name: \"mean\")"
+                        }
+                    ],
+                    "staticLegend": {
+                        "colorizeRows": true,
+                        "opacity": 1,
+                        "orientationThreshold": 100000000,
+                        "widthRatio": 1
+                    },
+                    "width": 12,
+                    "widthRatio": 1,
+                    "xCol": "_time",
+                    "yCol": "_value"
+                },
+                {
+                    "axes": [
+                        {
+                            "base": "10",
+                            "name": "x",
+                            "scale": "linear"
+                        },
+                        {
+                            "base": "2",
+                            "name": "y",
+                            "scale": "linear"
+                        }
+                    ],
+                    "colorizeRows": true,
+                    "colors": [
+                        {
+                            "id": "aW4QTGzo2uNjjoMklHHIB",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#31C0F6"
+                        },
+                        {
+                            "id": "8YC5I5xYc2GQcgv5YhZQo",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#A500A5"
+                        },
+                        {
+                            "id": "O9L2kj_BhbWQD0GztxW_y",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#FF7E27"
+                        }
+                    ],
+                    "geom": "step",
+                    "height": 3,
+                    "heightRatio": 0.2,
+                    "hoverDimension": "auto",
+                    "kind": "Xy",
+                    "legendColorizeRows": true,
+                    "legendOpacity": 1,
+                    "legendOrientationThreshold": 100000000,
+                    "name": "Stopping Required",
+                    "opacity": 1,
+                    "orientationThreshold": 100000000,
+                    "position": "overlaid",
+                    "queries": [
+                        {
+                            "query": "from(bucket: \"sensordata\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"machine_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"stopping_required\")\n  |> filter(fn: (r) => r[\"machine_id\"] == v.machine)\n  |>group()\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"mean\")"
+                        }
+                    ],
+                    "staticLegend": {
+                        "colorizeRows": true,
+                        "heightRatio": 0.2,
+                        "opacity": 1,
+                        "orientationThreshold": 100000000,
+                        "widthRatio": 1
+                    },
+                    "width": 12,
+                    "widthRatio": 1,
+                    "xCol": "_time",
+                    "yCol": "_value",
+                    "yPos": 3
+                },
+                {
+                    "axes": [
+                        {
+                            "base": "10",
+                            "name": "x",
+                            "scale": "linear"
+                        },
+                        {
+                            "base": "10",
+                            "name": "y",
+                            "scale": "linear"
+                        }
+                    ],
+                    "colorizeRows": true,
+                    "colors": [
+                        {
+                            "id": "aW4QTGzo2uNjjoMklHHIB",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#31C0F6"
+                        },
+                        {
+                            "id": "8YC5I5xYc2GQcgv5YhZQo",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#A500A5"
+                        },
+                        {
+                            "id": "O9L2kj_BhbWQD0GztxW_y",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#FF7E27"
+                        }
+                    ],
+                    "geom": "line",
+                    "height": 3,
+                    "hoverDimension": "auto",
+                    "kind": "Xy",
+                    "legendColorizeRows": true,
+                    "legendOpacity": 1,
+                    "legendOrientationThreshold": 100000000,
+                    "name": "Anomaly Prob",
+                    "opacity": 1,
+                    "orientationThreshold": 100000000,
+                    "position": "overlaid",
+                    "queries": [
+                        {
+                            "query": "from(bucket: \"sensordata\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"machine_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"anomaly_prob\")\n  |> filter(fn: (r) => r[\"machine_id\"] == \"machine01\")\n  |> filter(fn: (r) => r[\"operating_state\"] == \"OFF\" or r[\"operating_state\"] == \"RUNNING\" or r[\"operating_state\"] == \"STARTING\")\n  |> group()\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"mean\")"
+                        }
+                    ],
+                    "staticLegend": {
+                        "colorizeRows": true,
+                        "opacity": 1,
+                        "orientationThreshold": 100000000,
+                        "widthRatio": 1
+                    },
+                    "width": 12,
+                    "widthRatio": 1,
+                    "xCol": "_time",
+                    "yCol": "_value",
+                    "yPos": 6
+                },
+                {
+                    "axes": [
+                        {
+                            "base": "10",
+                            "name": "x",
+                            "scale": "linear"
+                        },
+                        {
+                            "base": "10",
+                            "name": "y",
+                            "scale": "linear"
+                        }
+                    ],
+                    "colorizeRows": true,
+                    "colors": [
+                        {
+                            "id": "4iJ3ZFMMY3TnFb86fjixE",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#31C0F6"
+                        },
+                        {
+                            "id": "hIX5szM9E4v9hAb1qR5Yh",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#A500A5"
+                        },
+                        {
+                            "id": "wVMWJkMSc7LROqsJVTh8X",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#FF7E27"
+                        }
+                    ],
+                    "geom": "line",
+                    "height": 3,
+                    "hoverDimension": "auto",
+                    "kind": "Xy",
+                    "legendColorizeRows": true,
+                    "legendOpacity": 1,
+                    "legendOrientationThreshold": 100000000,
+                    "name": "Temperature",
+                    "opacity": 1,
+                    "orientationThreshold": 100000000,
+                    "position": "overlaid",
+                    "queries": [
+                        {
+                            "query": "from(bucket: \"sensordata\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"machine_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperature\")\n  |> filter(fn: (r) => r[\"machine_id\"] == v.machine)\n  |> filter(fn: (r) => r[\"operating_state\"] == \"OFF\" or r[\"operating_state\"] == \"RUNNING\" or r[\"operating_state\"] == \"STARTING\")\n  |> group()\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")"
+                        }
+                    ],
+                    "staticLegend": {
+                        "colorizeRows": true,
+                        "opacity": 1,
+                        "orientationThreshold": 100000000,
+                        "widthRatio": 1
+                    },
+                    "width": 12,
+                    "widthRatio": 1,
+                    "xCol": "_time",
+                    "yCol": "_value",
+                    "yPos": 9
+                },
+                {
+                    "axes": [
+                        {
+                            "base": "10",
+                            "name": "x",
+                            "scale": "linear"
+                        },
+                        {
+                            "base": "10",
+                            "name": "y",
+                            "scale": "linear"
+                        }
+                    ],
+                    "colorizeRows": true,
+                    "colors": [
+                        {
+                            "id": "4iJ3ZFMMY3TnFb86fjixE",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#31C0F6"
+                        },
+                        {
+                            "id": "hIX5szM9E4v9hAb1qR5Yh",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#A500A5"
+                        },
+                        {
+                            "id": "wVMWJkMSc7LROqsJVTh8X",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#FF7E27"
+                        }
+                    ],
+                    "geom": "line",
+                    "height": 3,
+                    "hoverDimension": "auto",
+                    "kind": "Xy",
+                    "legendColorizeRows": true,
+                    "legendOpacity": 1,
+                    "legendOrientationThreshold": 100000000,
+                    "name": "Vibration",
+                    "opacity": 1,
+                    "orientationThreshold": 100000000,
+                    "position": "overlaid",
+                    "queries": [
+                        {
+                            "query": "from(bucket: \"sensordata\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"machine_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"vibration\")\n  |> filter(fn: (r) => r[\"machine_id\"] == v.machine)\n  |> filter(fn: (r) => r[\"operating_state\"] == \"OFF\" or r[\"operating_state\"] == \"RUNNING\" or r[\"operating_state\"] == \"STARTING\")\n  |> group()\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"mean\")"
+                        }
+                    ],
+                    "staticLegend": {
+                        "colorizeRows": true,
+                        "opacity": 1,
+                        "orientationThreshold": 100000000,
+                        "widthRatio": 1
+                    },
+                    "width": 12,
+                    "widthRatio": 1,
+                    "xCol": "_time",
+                    "yCol": "_value",
+                    "yPos": 12
+                },
+                {
+                    "axes": [
+                        {
+                            "base": "10",
+                            "name": "x",
+                            "scale": "linear"
+                        },
+                        {
+                            "base": "10",
+                            "name": "y",
+                            "scale": "linear"
+                        }
+                    ],
+                    "colorizeRows": true,
+                    "colors": [
+                        {
+                            "id": "4iJ3ZFMMY3TnFb86fjixE",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#31C0F6"
+                        },
+                        {
+                            "id": "hIX5szM9E4v9hAb1qR5Yh",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#A500A5"
+                        },
+                        {
+                            "id": "wVMWJkMSc7LROqsJVTh8X",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#FF7E27"
+                        }
+                    ],
+                    "geom": "line",
+                    "height": 3,
+                    "hoverDimension": "auto",
+                    "kind": "Xy",
+                    "legendColorizeRows": true,
+                    "legendOpacity": 1,
+                    "legendOrientationThreshold": 100000000,
+                    "name": "Health",
+                    "opacity": 1,
+                    "orientationThreshold": 100000000,
+                    "position": "overlaid",
+                    "queries": [
+                        {
+                            "query": "from(bucket: \"sensordata\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"machine_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"health\")\n  |> filter(fn: (r) => r[\"machine_id\"] == v.machine)\n  |> filter(fn: (r) => r[\"operating_state\"] == \"OFF\" or r[\"operating_state\"] == \"RUNNING\" or r[\"operating_state\"] == \"STARTING\")\n  |> group()\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"last\")"
+                        }
+                    ],
+                    "staticLegend": {
+                        "colorizeRows": true,
+                        "opacity": 1,
+                        "orientationThreshold": 100000000,
+                        "widthRatio": 1
+                    },
+                    "width": 12,
+                    "widthRatio": 1,
+                    "xCol": "_time",
+                    "yCol": "_value",
+                    "yPos": 15
+                },
+                {
+                    "axes": [
+                        {
+                            "base": "10",
+                            "name": "x",
+                            "scale": "linear"
+                        },
+                        {
+                            "base": "10",
+                            "name": "y",
+                            "scale": "linear"
+                        }
+                    ],
+                    "colorizeRows": true,
+                    "colors": [
+                        {
+                            "id": "bG12f1suHAm7zsgk-OvSG",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#31C0F6"
+                        },
+                        {
+                            "id": "84tBUyPr-j8TQ_n7pxmTu",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#A500A5"
+                        },
+                        {
+                            "id": "o0oXp0_g9j0s4OdotAAqt",
+                            "name": "Nineteen Eighty Four",
+                            "type": "scale",
+                            "hex": "#FF7E27"
+                        }
+                    ],
+                    "geom": "step",
+                    "height": 3,
+                    "hoverDimension": "auto",
+                    "kind": "Xy",
+                    "legendColorizeRows": true,
+                    "legendOpacity": 1,
+                    "legendOrientationThreshold": 100000000,
+                    "name": "ON/OFF",
+                    "opacity": 1,
+                    "orientationThreshold": 100000000,
+                    "position": "overlaid",
+                    "queries": [
+                        {
+                            "query": "from(bucket: \"sensordata\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"machine_metrics\")\n  |> filter(fn: (r) => r[\"_field\"] == \"switch_state\")\n  |> filter(fn: (r) => r[\"machine_id\"] == v.machine)\n  |> group(columns:[])\n  |> map(fn: (r) => ({\n        r with _value: if r._value == \"ON\" then 1 else 0\n    }))\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"mean\")"
+                        }
+                    ],
+                    "staticLegend": {
+                        "colorizeRows": true,
+                        "opacity": 1,
+                        "orientationThreshold": 100000000,
+                        "widthRatio": 1
+                    },
+                    "width": 12,
+                    "widthRatio": 1,
+                    "xCol": "_time",
+                    "yCol": "_value",
+                    "yPos": 18
+                }
+            ],
+            "name": "Machine History"
+        }
+    }
+]

@@ -1,0 +1,6 @@
+controlboard.db
+__pycache__/
+.env
+*.pem
+*.key
+*.crt

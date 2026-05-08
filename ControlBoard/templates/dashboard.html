@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control Board — Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <!-- ── Top Bar ──────────────────────────────────────────── -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <svg
+          class="topbar-icon"
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg>
+        <h1 class="topbar-title">Control Board</h1>
+        <span class="topbar-badge" id="connection-badge">Connecting...</span>
+      </div>
+      <div class="topbar-right">
+        <div class="user-info">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span class="user-name">{{ username }}</span>
+          <span class="user-role">({{ role }})</span>
+        </div>
+        {% if role == 'admin' %}
+        <button class="btn btn-sm btn-outline" onclick="toggleAdminPanel()">
+          Manage Users
+        </button>
+        {% endif %}
+        <a href="/logout" class="btn btn-sm btn-ghost">Sign Out</a>
+      </div>
+    </header>
+
+    <!-- ── Machine Grid ─────────────────────────────────────── -->
+    <main class="dashboard" style="display: flex;justify-content: center;padding: 0;padding-top: 8px;">
+      <div class="machine-grid" id="machine-grid">
+        {% for mid in machines %}
+        <div>
+        <h2 class="machine-name">{{ mid }}</h2>
+        <div class="card-body split">
+          <!-- LEFT: Metrics -->
+          <div class="metrics-panel">
+            <div class="sensor-grid">
+              <div class="sensor-item">
+                <span class="sensor-label">Temperature</span>
+                <span class="sensor-value" id="temp-{{ mid }}">—</span>
+                <span class="sensor-unit">°C</span>
+              </div>
+              <div class="sensor-item">
+                <span class="sensor-label">Vibration</span>
+                <span class="sensor-value" id="vib-{{ mid }}">—</span>
+                <span class="sensor-unit">mm/s</span>
+              </div>
+              <div class="sensor-item">
+                <span class="sensor-label">Current</span>
+                <span class="sensor-value" id="curr-{{ mid }}">—</span>
+                <span class="sensor-unit">A</span>
+              </div>
+            </div>
+
+            <div class="anomaly-section">
+              <div class="anomaly-header">
+                <span class="anomaly-label">Anomaly Probability</span>
+                <span class="anomaly-value" id="anomaly-val-{{ mid }}">—</span>
+              </div>
+              <div class="anomaly-bar-bg">
+                <div
+                  class="anomaly-bar-fill"
+                  id="anomaly-bar-{{ mid }}"
+                  style="width: 0%"
+                ></div>
+              </div>
+            </div>
+
+            <div
+              class="issues-section"
+              id="issues-{{ mid }}"
+              style="visibility: hidden"
+            >
+              <span class="issues-label">Issues:</span>
+              <span class="issues-list" id="issues-list-{{ mid }}"></span>
+            </div>
+            <!-- Actions (LEFT SIDE) -->
+            <div class="metrics-actions">
+              <a
+                class="btn btn-twin"
+                href="{{ digital_twin_base_url }}{{ mid }}"
+                target="_blank"
+              >
+                OPEN TWIN ↗
+              </a>
+
+              <a
+                class="btn btn-twin"
+                href="{{ dashboard_base_url }}{{ mid }}"
+                target="_blank"
+              >
+                ANALYTICS 📊
+              </a>
+            </div>
+            <div class="card-footer vertical">
+              <div class="switch-status">
+                <span class="switch-label">Switch State:</span>
+                <span class="switch-value" id="switch-{{ mid }}">—</span>
+              </div>
+
+              <div class="control-buttons">
+                <button
+                  class="btn btn-on"
+                  onclick="sendCommand('{{ mid }}', 'ON')"
+                  id="btn-on-{{ mid }}"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                  </svg>
+                  POWER ON
+                </button>
+
+                <button
+                  class="btn btn-off"
+                  onclick="sendCommand('{{ mid }}', 'OFF')"
+                  id="btn-off-{{ mid }}"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="8" y1="8" x2="16" y2="16" />
+                    <line x1="16" y1="8" x2="8" y2="16" />
+                  </svg>
+                  POWER OFF
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Twin -->
+          <div class="twin-panel">
+            <iframe src="{{ digital_twin_base_url }}{{ mid }}"></iframe>
+          </div>
+        </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Empty state -->
+      {% if not machines %}
+      <div class="empty-state">
+        <svg
+          width="64"
+          height="64"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+        >
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg>
+        <h3>No Machines Assigned</h3>
+        <p>Contact an administrator to get machine access.</p>
+      </div>
+      {% endif %}
+    </main>
+
+    <!-- ── Admin Panel (overlay) ──────────────────────────── -->
+    {% if role == 'admin' %}
+    <div class="admin-overlay" id="admin-overlay" style="display: none">
+      <div class="admin-panel">
+        <div class="admin-header">
+          <h2>User Management</h2>
+          <button class="btn btn-ghost" onclick="toggleAdminPanel()">
+            &times;
+          </button>
+        </div>
+        <div class="admin-body">
+          <div id="user-list" class="user-list"></div>
+          <hr class="divider" />
+          <h3>Add New User</h3>
+          <form
+            id="add-user-form"
+            class="add-user-form"
+            onsubmit="addUser(event)"
+          >
+            <div class="form-row">
+              <input
+                type="text"
+                id="new-username"
+                placeholder="Username"
+                required
+              />
+              <input
+                type="password"
+                id="new-password"
+                placeholder="Password"
+                required
+              />
+              <select id="new-role">
+                <option value="operator">Operator</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <input
+                type="text"
+                id="new-machines"
+                placeholder="Machine IDs (comma-separated)"
+              />
+              <button type="submit" class="btn btn-on btn-sm">
+                Create User
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- ── Toast Container ──────────────────────────────────── -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="/static/js/dashboard.js"></script>
+  </body>
+</html>

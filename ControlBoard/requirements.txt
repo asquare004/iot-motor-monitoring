@@ -1,0 +1,6 @@
+flask>=3.0
+werkzeug>=3.0
+python-dotenv>=1.0
+awsiotsdk>=1.0
+awscrt>=0.19
+AwsIotPythonSDK>=1.0

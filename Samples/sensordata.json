@@ -1,0 +1,8 @@
+{
+  "temperature": 125.5,
+    "vibration": 0.02,
+    "current": 15.0,
+    "machine_id": "machine_001",
+    "switch_state":"ON",
+    "health":90
+}

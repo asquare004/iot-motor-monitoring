@@ -1,0 +1,113 @@
+services:
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_USERNAME}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_PASSWORD}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_ORG}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN}
+    restart: unless-stopped
+
+  iotproject_cloud:
+    build: ./CloudBackend
+    container_name: iotproject_cloud
+    depends_on:
+      - influxdb
+      - twin_backend
+    env_file:
+      - ./CloudBackend/.env
+    environment:
+      - TWIN_URL=http://twin_backend:8000/twin/update
+    volumes:
+      - ./CloudBackend/Certificates:/app/Certificates
+      - ./CloudBackend/Keys:/app/Keys
+      - ./CloudBackend/CA:/app/CA
+      - ./CloudBackend/AI/models:/app/AI/models
+    command: python -m Cloud.App
+    restart: unless-stopped
+
+  simulated_edge_01:
+    build: ./SimulatedEdge
+    container_name: simulated_edge_01
+    depends_on:
+      - influxdb
+    env_file:
+      - ./SimulatedEdge/.env
+    environment:
+      MACHINE_ID: machine01
+    volumes:
+      - ./SimulatedEdge/Certificates:/app/Certificates
+      - ./SimulatedEdge/Keys:/app/Keys
+      - ./SimulatedEdge/CA:/app/CA
+    command: python -m App
+    restart: unless-stopped
+
+  simulated_edge_02:
+    build: ./SimulatedEdge
+    container_name: simulated_edge_02
+    depends_on:
+      - influxdb
+    env_file:
+      - ./SimulatedEdge/.env
+    environment:
+      MACHINE_ID: machine02
+    volumes:
+      - ./SimulatedEdge/Certificates:/app/Certificates
+      - ./SimulatedEdge/Keys:/app/Keys
+      - ./SimulatedEdge/CA:/app/CA
+    command: python -m App
+    restart: unless-stopped
+
+  trainer:
+    build: ./CloudBackend
+    container_name: iotproject_trainer
+    depends_on:
+      - influxdb
+    env_file:
+      - ./CloudBackend/.env
+    volumes:
+      - ./CloudBackend/AI/models:/app/AI/models  
+    command: >
+      sh -c "while true;
+             do python -m AI.train_iforest || true;
+             sleep 300;
+             done"
+    restart: unless-stopped
+  
+  twin_backend:
+    build: "./Digital Twin"
+    container_name: twin_backend
+    env_file:
+      - "./Digital Twin/.env"
+    volumes:
+      - "./Digital Twin/Certificates:/app/Certificates"
+      - "./Digital Twin/Keys:/app/Keys"
+      - "./Digital Twin/CA:/app/CA"
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  control_board_backend:
+    build: "./ControlBoard"
+    container_name: control_board_backend
+    env_file:
+      - ./ControlBoard/.env
+    volumes:
+      - ./ControlBoard/data:/app/data
+      - ./ControlBoard/Backend/Utils/Certificates:/app/Backend/Utils/Certificates
+      - ./ControlBoard/Backend/Utils/Keys:/app/Backend/Utils/Keys
+      - ./ControlBoard/Backend/Utils/CA:/app/Backend/Utils/CA
+    command: sh -c "python init_db.py && python app.py"
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+
+volumes:
+  influxdb_data:

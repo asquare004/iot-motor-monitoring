@@ -1,0 +1,8 @@
+awsiotsdk
+python-dotenv
+influxdb-client
+numpy
+pandas
+scikit-learn
+joblib
+requests
